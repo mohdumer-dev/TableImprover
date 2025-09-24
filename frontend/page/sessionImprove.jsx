@@ -8,6 +8,7 @@ import GradientButton from "../components/GradientButton.jsx";
 import React from "react";
 
 function Improver(){
+  const timerRef=useRef()
   const completed=useRef(false)
    const ses=  localStorage.getItem("sessionId")
 
@@ -34,7 +35,7 @@ const [time, setTime] = useState(0)
    const  currentScore= getData("EngineData","score")//we get the score
    const questionId = localStorage.getItem("questionId")//get  the questionId
    
-     const res=await axios.get("http://localhost:3000/api/v1/session/getQuestions/"+questionId)
+    
      const res2=await axios.post("http://localhost:3000/api/v1/session/checkQuestions",{
      sessionId: sessionId.current,
      question:{
@@ -44,6 +45,7 @@ const [time, setTime] = useState(0)
      answer:inputVal
 
      })
+     
 
      if(res2.data.completed){
 
@@ -56,6 +58,8 @@ const [time, setTime] = useState(0)
 const newEn = { ...prev, score: currentScore + 1 }
 localStorage.setItem("EngineData", JSON.stringify(newEn))
      }
+
+      const res=await axios.get("http://localhost:3000/api/v1/session/getQuestions/"+questionId)
 
      console.log(res.data+"this is res")
 
@@ -74,7 +78,7 @@ localStorage.setItem("EngineData", JSON.stringify(newEn))
     
     //Timer 
 useEffect(() => {
-  const interval = setInterval(() => {
+   timerRef.current = setInterval(() => {
     const  prevTime=parseInt(getData("EngineData","time"))
     const prevEngine=JSON.parse(localStorage.getItem("EngineData"))
     const newTime=prevTime+1
@@ -86,9 +90,12 @@ useEffect(() => {
     setTime(getData("EngineData","time"))
 
 
+
+
+
     
   }, 1000);
-  return () => clearInterval(interval);
+  return () => clearInterval(timerRef.current);
 }, [])
     
 //Sets  EngineData
@@ -134,6 +141,8 @@ useEffect(() => {
     
   }
   if (completed.current) {
+    clearInterval(timerRef.current)
+    
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="text-xl font-bold bg-purple-800">Session is completed</span>
