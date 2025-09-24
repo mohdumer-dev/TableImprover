@@ -173,8 +173,10 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
     if(numberOfQuestions-1===numberOfQuestionsDone){
 
 
+
+
       await SessionModel.updateOne(
-        { sessionId },
+        { _id:sessionId },
         { $set: {completed:true} }
         );
 
@@ -218,6 +220,22 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
 
 
     
+})
+
+SessionRouter.put("/timeTaken",async function (req,res){
+  const timeTaken=req.body.timeTaken
+  const sessionId=req.body.sessionId
+
+  await SessionModel.updateOne(
+        {_id: sessionId },
+        { $set:{timeTaken}}
+        );
+
+  res.json({
+    message:"successfully added the timeTaken"
+  })
+
+
 })
 
 export default SessionRouter;

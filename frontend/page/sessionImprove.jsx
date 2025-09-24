@@ -1,4 +1,5 @@
 import { useContext,useEffect, useRef, useState } from "react";
+
 import IsSession from "../context";
 import DisplayText from "../components/displaytext";
 import useFetch from "../hooks/useFetch";
@@ -6,8 +7,10 @@ import axios from "axios";
 import getData from "../functions/getData.js";
 import GradientButton from "../components/GradientButton.jsx";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Improver(){
+  const navigate=useNavigate()
   const timerRef=useRef()
   const completed=useRef(false)
    const ses=  localStorage.getItem("sessionId")
@@ -142,10 +145,30 @@ useEffect(() => {
   }
   if (completed.current) {
     clearInterval(timerRef.current)
+
+   const time= getData("EngineData","time")
+
+
+   async function onComplete(){
+    const res=axios.put("http://localhost:3000/api/v1/session/timeTaken",{
+      timeTaken :time,
+      sessionId:sessionId.current
+    })
+
+    console.log(res.data)
+    localStorage.clear()
+    //isSession context
+    isSession.setIsSession(true)
+
+    navigate("/app/sessions")
+
+
+    }
     
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="text-xl font-bold bg-purple-800">Session is completed</span>
+        <GradientButton onClick={onComplete}>End Session</GradientButton>
       </div>
     );
     
