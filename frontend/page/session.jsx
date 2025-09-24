@@ -46,6 +46,9 @@ async  function onclickHandler(){
 
   localStorage.setItem("sessionId", res.data.sessionId);
 
+  const QuestionId=await axios.get("http://localhost:3000/api/v1/session/generate/"+res.data.sessionId)
+  localStorage.setItem('questionId',QuestionId.data.message)
+
   navigate("/app/sessions/improve")
   }
 

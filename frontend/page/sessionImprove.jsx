@@ -5,13 +5,18 @@ import useFetch from "../hooks/useFetch";
 import axios from "axios";
 import getData from "../functions/getData.js";
 import GradientButton from "../components/GradientButton.jsx";
+import React from "react";
 
 function Improver(){
+  const completed=useRef(false)
    const ses=  localStorage.getItem("sessionId")
 
     const sessionId=useRef(ses)
     const  isSession=useContext(IsSession)
-    const QuestionId=useFetch("http://localhost:3000/api/v1/session/generate/"+sessionId.current)
+    
+    
+   
+   
     const score =useFetch("http://localhost:3000/api/v1/session/stats/"+sessionId.current)
 
 const [Score, setScore] = useState(0)
@@ -28,6 +33,7 @@ const [time, setTime] = useState(0)
 
    const  currentScore= getData("EngineData","score")//we get the score
    const questionId = localStorage.getItem("questionId")//get  the questionId
+   
      const res=await axios.get("http://localhost:3000/api/v1/session/getQuestions/"+questionId)
      const res2=await axios.post("http://localhost:3000/api/v1/session/checkQuestions",{
      sessionId: sessionId.current,
@@ -41,7 +47,7 @@ const [time, setTime] = useState(0)
 
      if(res2.data.completed){
 
-      console.log("This session is completed")
+      completed.current=true
 
      }
 
@@ -51,7 +57,7 @@ const newEn = { ...prev, score: currentScore + 1 }
 localStorage.setItem("EngineData", JSON.stringify(newEn))
      }
 
-     console.log(res.data.table+"this is res")
+     console.log(res.data+"this is res")
 
     const newScore=getData("EngineData",'score')
    
@@ -87,9 +93,8 @@ useEffect(() => {
     
 //Sets  EngineData
 useEffect(() => {
-    if (QuestionId.data && QuestionId.data.message) {
-        localStorage.setItem("questionId", QuestionId.data.message);
-    }
+
+
     const  EngineData=localStorage.getItem("EngineData")
 
     if(!EngineData){
@@ -97,7 +102,7 @@ useEffect(() => {
     }
     
  
-}, [QuestionId.data]);
+}, []);
 
 
 
@@ -118,12 +123,25 @@ useEffect(() => {
 
     },[])
 
-      if (QuestionId.loading || score.loading) {
+      if ( score.loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="text-xl font-bold text-blue-600">Loading...</span>
       </div>
     );
+    
+    
+    
+  }
+  if (completed.current) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="text-xl font-bold bg-purple-800">Session is completed</span>
+      </div>
+    );
+    
+    
+    
   }
       
     return<div className="flex flex-col gap-3">
