@@ -8,17 +8,15 @@ import GradientButton from "../components/GradientButton.jsx";
 
 function Improver(){
    const ses=  localStorage.getItem("sessionId")
-   console.log(ses)
+
     const sessionId=useRef(ses)
     const  isSession=useContext(IsSession)
     const QuestionId=useFetch("http://localhost:3000/api/v1/session/generate/"+sessionId.current)
     const score =useFetch("http://localhost:3000/api/v1/session/stats/"+sessionId.current)
-    const initialScore = JSON.parse(localStorage.getItem("EngineData"))?.score || 0;
-const [Score, setScore] = useState(initialScore)
-    const initialTime = JSON.parse(localStorage.getItem("EngineData"))?.time || 0;
-const [time, setTime] = useState(initialTime)
-    const [inputVal,setInputVal] = useState("")
 
+const [Score, setScore] = useState(0)
+const [time, setTime] = useState(0)
+ const [inputVal,setInputVal] = useState("")
     const [tableData,setTableData]=useState()
     
   
@@ -28,8 +26,8 @@ const [time, setTime] = useState(initialTime)
    async function onSumbit(){
     console.log("Sumbit is  clicked")
 
-     const  currentScore= getData("EngineData","score")
-   const questionId = localStorage.getItem("questionId")
+   const  currentScore= getData("EngineData","score")//we get the score
+   const questionId = localStorage.getItem("questionId")//get  the questionId
      const res=await axios.get("http://localhost:3000/api/v1/session/getQuestions/"+questionId)
      const res2=await axios.post("http://localhost:3000/api/v1/session/checkQuestions",{
      sessionId: sessionId.current,
@@ -40,6 +38,12 @@ const [time, setTime] = useState(initialTime)
      answer:inputVal
 
      })
+
+     if(res2.data.completed){
+
+      console.log("This session is completed")
+
+     }
 
      if(res2.data.correct){
       const prev = JSON.parse(localStorage.getItem("EngineData"))
@@ -65,11 +69,18 @@ localStorage.setItem("EngineData", JSON.stringify(newEn))
     //Timer 
 useEffect(() => {
   const interval = setInterval(() => {
-    const prevData = JSON.parse(localStorage.getItem("EngineData")) ;
-    const newTime = prevData.time + 1;
-    const newEngineData = { ...prevData, time: newTime };
-    localStorage.setItem("EngineData", JSON.stringify(newEngineData));
-    setTime(newTime);
+    const  prevTime=parseInt(getData("EngineData","time"))
+    const prevEngine=JSON.parse(localStorage.getItem("EngineData"))
+    const newTime=prevTime+1
+    const newEngine={...prevEngine,time:newTime}
+    localStorage.setItem("EngineData",JSON.stringify(newEngine))
+
+    
+
+    setTime(getData("EngineData","time"))
+
+
+    
   }, 1000);
   return () => clearInterval(interval);
 }, [])
@@ -134,7 +145,7 @@ useEffect(() => {
    onChange={e=>setInputVal(e.target.value)}
     type="number" 
     placeholder="Enter your Answer" 
-    class="w-80 px-4 py-2 border border-gray-300 rounded-xl shadow-sm 
+    className="w-80 px-4 py-2 border border-gray-300 rounded-xl shadow-sm 
            focus:outline-none focus:ring-2 focus:ring-blue-500 
            focus:border-blue-500 text-gray-700 placeholder-gray-400"
   />
