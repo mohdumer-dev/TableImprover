@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CompletedSection from "../components/completedSection.jsx";
 
 function Improver(){
+  const inputRef=useRef()
   const navigate=useNavigate()
   const timerRef=useRef()
   const [completed,setCompleted]=useState(false)
@@ -79,6 +80,10 @@ localStorage.setItem("EngineData", JSON.stringify(newEn))
      setTableData(res.data)
 
      setScore(newScore)
+
+     inputRef.current.focus()
+
+     setInputVal("")
 
 
     }
@@ -173,6 +178,7 @@ useEffect(() => {
 
   <div className="flex justify-center">
    <input 
+   ref={inputRef}
    value={inputVal}
    onChange={e=>setInputVal(e.target.value)}
     type="number" 
