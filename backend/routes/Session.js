@@ -52,6 +52,10 @@ SessionRouter.get("/stats/:sessionId", async (req,res)=>{
 
 const { sessionId } = req.params;
 
+if(sessionId===null){
+      res.json({message:"You cannot  give nulll as a questionid"})
+    }
+
     const session = await SessionModel.findOne({ _id: sessionId });
     if (!session) {
       return res.status(404).json({ error: "Session not found" });
@@ -142,6 +146,9 @@ SessionRouter.get("/generate/:sessionId", async (req, res) => {
 SessionRouter.get("/getQuestions/:questionId",async function(req,res) {
     const {questionId}=req.params
 
+    if(questionId===null){
+      res.json({message:"You cannot  give nulll as a questionid"})
+    }
     const questionDoc=await  QuestionModel.findOne({_id:questionId})
     const sessionDoc=await SessionModel.findOne({_id:questionDoc.sessionId})
 
