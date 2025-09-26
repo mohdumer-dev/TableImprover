@@ -1,165 +1,177 @@
-import React, { useState,useContext } from 'react';
-import { BarChart3,  Users } from 'lucide-react';
-import { UserButton } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
-import IsSession from '../context.js';
 
-const SimpleSidebar = () => {
-  const {isSession}=useContext(IsSession)
-  const [activeItem, setActiveItem] = useState('dashboard');
+import React, { useState, useContext } from "react";
+import { BarChart3, Users, Menu } from "lucide-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+import IsSession from "../context.js";
+
+const SimpleSidebar = ({ isMobile, isTablet }) => {
+  const { isSession } = useContext(IsSession);
+  const { user } = useUser();  // get user info from Clerk
+  const [activeItem, setActiveItem] = useState("dashboard");
+  const [isOpen, setIsOpen] = useState(!(isMobile || isTablet));
   const navigateTo = useNavigate();
 
   const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: BarChart3 },
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: BarChart3,
-    },
-    {
-      id: isSession?'sessions':"sessions/improve",
-      label: 'Sessions',
+      id: isSession ? "sessions" : "sessions/improve",
+      label: "Sessions",
       icon: Users,
-    }
+    },
   ];
 
   const sidebarStyle = {
-    position: 'fixed',
-    left: 0,
+    position: "fixed",
+    left: isOpen ? 0 : "-280px",
     top: 0,
-    height: '100vh',
-    width: '280px',
-    background: 'linear-gradient(135deg, rgba(255, 20, 147, 0.95) 0%, rgba(138, 43, 226, 0.95) 50%, rgba(72, 61, 139, 0.95) 100%)',
-    backdropFilter: 'blur(20px)',
-    borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+    height: "100vh",
+    width: "280px",
+    background: "linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #121212 100%)",
+    borderRight: "1px solid rgba(255, 255, 255, 0.1)",
     zIndex: 1000,
-    display: 'flex',
-    flexDirection: 'column',
-  };
-
-  const logoSectionStyle = {
-    padding: '2rem',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-  };
-
-  const logoStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-  };
-
-  const logoIconStyle = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
-    background: 'linear-gradient(45deg, #00f5ff, #ff00ff, #ffaa00)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    color: 'white',
-  };
-
-  const logoTextStyle = {
-    fontSize: '20px',
-    fontWeight: '600',
-    color: 'white',
-  };
-
-  const navSectionStyle = {
-    flex: 1,
-    padding: '2rem 1.5rem',
+    display: "flex",
+    flexDirection: "column",
+    transition: "left 0.3s ease",
   };
 
   const getNavItemStyle = (isActive) => ({
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    padding: '12px 16px',
-    marginBottom: '12px',
-    borderRadius: '16px',
-    border: 'none',
-    background: isActive 
-      ? 'rgba(255, 255, 255, 0.3)'
-      : 'transparent',
-    color: 'white',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    fontSize: '16px',
-    fontWeight: '500',
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+    padding: "12px 16px",
+    marginBottom: "12px",
+    borderRadius: "12px",
+    background: isActive ? "rgba(255, 255, 255, 0.1)" : "transparent",
+    color: isActive ? "#ffffff" : "#b3b3b3",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
   });
-
-  const getIconContainerStyle = (isActive) => ({
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
-    background: isActive 
-      ? 'rgba(255, 255, 255, 0.2)'
-      : 'rgba(255, 255, 255, 0.1)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease',
-  });
-
-  const userSectionStyle = {
-    padding: '1.5rem',
-    borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-  };
 
   return (
-    <div style={sidebarStyle}>
-      {/* Logo Section */}
-      <div style={logoSectionStyle}>
-        <div style={logoStyle}>
-          <div style={logoIconStyle}>T</div>
-          <div>
-            <div style={logoTextStyle}>Table Improver</div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>Professional Suite</div>
+    <>
+      {(isMobile || isTablet) && (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          style={{
+            position: "fixed",
+            top: "20px",
+            left: "20px",
+            zIndex: 1100,
+            background: "#222",
+            color: "white",
+            padding: "10px",
+            borderRadius: "8px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          <Menu size={24} />
+        </button>
+      )}
+
+      <div style={sidebarStyle}>
+        {/* Logo */}
+        <div
+          style={{
+            padding: "2rem",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "12px",
+                background: "linear-gradient(45deg, #7c3aed, #ec4899)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              T
+            </div>
+            <div>
+              <div style={{ fontSize: "20px", fontWeight: "600", color: "white" }}>
+                Table Improver
+              </div>
+              <div style={{ color: "#888", fontSize: "14px" }}>
+                Professional Suite
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Nav items */}
+        <div style={{ flex: 1, padding: "2rem 1.5rem" }}>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeItem === item.id;
+            return (
+              <div
+                key={item.id}
+                style={getNavItemStyle(isActive)}
+                onClick={() => {
+                  setActiveItem(item.id);
+                  navigateTo(`/app/${item.id}`);
+                  if (isMobile || isTablet) setIsOpen(false);
+                }}
+              >
+                <Icon size={20} color="white" />
+                <span>{item.label}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* User section — username + gmail */}
+        <div
+          style={{
+            padding: "1.5rem",
+            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          {/* You can keep a small avatar or icon if you want */}
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "w-8 h-8 rounded-full", // small avatar
+              },
+            }}
+          />
+          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <span
+              style={{
+                fontWeight: "600",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {user?.fullName || user?.firstName || "User"}
+            </span>
+            <span
+              style={{
+                fontSize: "14px",
+                opacity: 0.8,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || ""}
+            </span>
           </div>
         </div>
       </div>
-
-      {/* Navigation */}
-      <div style={navSectionStyle}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeItem === item.id;
-          
-          return (
-            <div
-              key={item.id}
-              style={getNavItemStyle(isActive)}
-              onClick={() => {
-                setActiveItem(item.id);
-              navigateTo( `/app/${item.id}`);
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.target.style.background = 'rgba(255, 255, 255, 0.2)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.target.style.background = 'transparent';
-                }
-              }}
-            >
-              <div style={getIconContainerStyle(isActive)}>
-                <Icon size={20} color="white" />
-              </div>
-              <span>{item.label}</span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* User Profile */}
-      <div style={userSectionStyle}>
-        <UserButton />
-      </div>
-    </div>
+    </>
   );
 };
 

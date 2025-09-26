@@ -15,7 +15,7 @@ export default function CircleButton({ number, onToggle }) {
       className={`
         relative w-[45px] h-[45px] rounded-full font-bold text-lg
         flex items-center justify-center overflow-hidden group
-        border-2 border-black transition-colors
+        border-2 border-black transition-colors cursor-pointer
         ${selected ? "text-black" : "text-black"}
       `}
     >
