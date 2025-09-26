@@ -53,7 +53,7 @@ export default function Card({ name, data, type = 'default', trend, animate = tr
   }, [data, animate]);
 
   return (
-    <div className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${theme.bg} 
+    <div className={`group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-br ${theme.bg} 
       p-6 shadow-xl hover:shadow-2xl ${theme.glow} border border-white/20 backdrop-blur-sm 
       transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-1 
       w-full h-40 sm:h-44 md:h-48 lg:h-52`}>
