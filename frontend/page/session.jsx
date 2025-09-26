@@ -51,7 +51,7 @@ const Session = () => {
   };
 
   return (
-    <div className="flex-1 -m-px bg-gradient-to-br p-0 rounded-xl from-slate-900 via-purple-900 to-slate-900 overflow-hidden  relative">
+    <div className="flex-1  bg-gradient-to-br p-0  from-slate-900 via-purple-900 to-slate-900 overflow-hidden h-full  relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>

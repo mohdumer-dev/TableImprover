@@ -33,16 +33,16 @@ function App() {
     const getMainContentStyle = () => {
       if (isMobile || isTablet) {
         return {
-          padding: isMobile ? "1rem" : "1.5rem",
+          // padding: isMobile ? "1rem" : "1.5rem",
           minHeight: "100vh",
           width: "100%",
           transition: "all 0.3s ease",
-          paddingTop: "4rem", // leave space for menu button
+        
         };
       } else {
         return {
           marginLeft: "280px", // push content right
-          padding: "2rem",
+          padding: "0rem",
           minHeight: "100vh",
           width: "calc(100% - 280px)",
           transition: "all 0.3s ease",

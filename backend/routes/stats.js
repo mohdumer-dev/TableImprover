@@ -4,11 +4,14 @@ import express from "express";
 import mongoose from "mongoose";
 const StatsRouter= express.Router();
 import {UserModel,StatsModel} from "../models.js"
+import check from "../middleware/check.js";
+
 
 
 StatsRouter.use(express.json())
 
-StatsRouter.post("/getStats",async function (req,res) {
+
+StatsRouter.post("/getStats",check,async function (req,res) {
 
         const user=req.body.user
         console.log(user)
