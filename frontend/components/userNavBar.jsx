@@ -1,16 +1,58 @@
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { BarChart3, Users, Menu } from "lucide-react";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import IsSession from "../context.js";
+import getData from "../functions/getData.js";
+import { useLocation } from "react-router-dom";
+import auLocal from "../functions/addLocal.js";
 
 const SimpleSidebar = ({ isMobile, isTablet }) => {
+
+  const location=useLocation()
   const { isSession } = useContext(IsSession);
   const { user } = useUser();  // get user info from Clerk
-  const [activeItem, setActiveItem] = useState("dashboard");
+
+  const ActiveItem= getData("UniData","activeItem")
+
+  if(!ActiveItem){
+    auLocal("UniData","activeItem","dashboard")
+  }
+
+ const RealActiveItem=getData("UniData","activeItem")
+
+ 
+
+  const [activeItem, setActiveItem] = useState(RealActiveItem)
   const [isOpen, setIsOpen] = useState(!(isMobile || isTablet));
   const navigateTo = useNavigate();
+
+  useEffect(()=>{
+    const RealActiveItem=getData("UniData","activeItem")
+    if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
+      auLocal("UniData","activeItem","sessions/improve")
+      const RealActiveItem=getData("UniData","activeItem")
+      setActiveItem(RealActiveItem)
+    }
+    else{
+    if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
+      auLocal("UniData","activeItem","sessions")
+      const RealActiveItem=getData("UniData","activeItem")
+      setActiveItem(RealActiveItem)
+   
+    }
+    }
+    
+    
+
+    console.log(location.pathname)
+   },[location.pathname])
+
+
+
+
+
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
@@ -115,7 +157,21 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
                 key={item.id}
                 style={getNavItemStyle(isActive)}
                 onClick={() => {
-                  setActiveItem(item.id);
+
+                  const ActiveItem= getData("UniData","activeItem")
+
+                  if(ActiveItem){
+                    
+                      auLocal("UniData","activeItem",item.id)
+                    
+                    
+                  }
+
+                 const RealActiveItem=getData("UniData","activeItem")
+
+                 console.log("this is active"+RealActiveItem)
+
+                  setActiveItem(RealActiveItem);
                   navigateTo(`/app/${item.id}`);
                   if (isMobile || isTablet) setIsOpen(false);
                 }}

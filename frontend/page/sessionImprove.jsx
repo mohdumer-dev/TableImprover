@@ -207,6 +207,8 @@ import GradientButton from "../components/GradientButton.jsx";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CompletedSection from "../components/completedSection.jsx";
+import auLocal from "../functions/addLocal.js";
+
 
 function Improver() {
   const inputRef = useRef();
@@ -238,20 +240,28 @@ function Improver() {
     });
 
     if (res2.data.completed) {
-      setCompleted(true);
+      setCompleted(true)
+      
     }
 
     if (res2.data.correct) {
       const prev = JSON.parse(localStorage.getItem("EngineData"));
       const newEn = { ...prev, score: currentScore + 1 };
       localStorage.setItem("EngineData", JSON.stringify(newEn));
+      console.log("i was called data.correct")
+
+        const newScore = getData("EngineData", "score");
+
+         setScore(newScore);
+
+       
     }
 
     const res = await axios.get("http://localhost:3000/api/v1/session/getQuestions/" + questionId);
     const newScore = getData("EngineData", "score");
 
     setTableData(res.data);
-    setScore(newScore);
+   
     if(inputRef.current){
 inputRef.current.focus();
     }
@@ -259,8 +269,14 @@ inputRef.current.focus();
     setInputVal("");
   }
 
+ 
+
   // Timer
+
+   
+
   useEffect(() => {
+    
     timerRef.current = setInterval(() => {
       const prevTime = parseInt(getData("EngineData", "time"));
       const prevEngine = JSON.parse(localStorage.getItem("EngineData"));
@@ -287,11 +303,34 @@ inputRef.current.focus();
       const questionId = localStorage.getItem("questionId");
       const res = await axios.get("http://localhost:3000/api/v1/session/getQuestions/" + questionId);
       setTableData(res.data);
+
       const score = getData("EngineData", "score");
       setScore(score);
     }
     call();
   }, []);
+
+   //For extra things that you need to do in the mounting stage
+   useEffect(()=>{
+    // auLocal("UniData",'activeItem',"sessions")
+  },[])
+
+       const progress =
+    score.data?.numberOfQuestions && score.data?.numberOfQuestions > 0
+      ? (Score / score.data?.numberOfQuestions) * 100
+      : 0;
+
+   
+
+
+
+    const handleKeyDown = (event) => {
+      
+    if (event.key === "Enter") {
+      onSumbit()
+    }
+  };
+
 
   if (score.loading) {
     return (
@@ -309,10 +348,7 @@ inputRef.current.focus();
   }
 
   // progress bar width
-  const progress =
-    score.data?.numberOfQuestions && score.data?.numberOfQuestions > 0
-      ? (Score / score.data?.numberOfQuestions) * 100
-      : 0;
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black p-4 md:p-8 flex items-center justify-center">
@@ -354,6 +390,7 @@ inputRef.current.focus();
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             type="number"
+            onKeyDown={handleKeyDown}
             placeholder="Enter your Answer"
             className="w-80 px-4 py-3 rounded-xl text-center text-lg font-semibold shadow-xl border border-purple-400/40
                      bg-gray-900 text-white placeholder-gray-400 

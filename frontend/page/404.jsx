@@ -7,7 +7,6 @@ export default function NotFoundPage() {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          // Redirect to home page
           window.location.href = '/';
           return 0;
         }
@@ -23,64 +22,96 @@ export default function NotFoundPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 flex items-center justify-center p-4">
-      <div className="text-center max-w-lg mx-auto">
-        {/* Animated 404 */}
-        <div className="relative">
-          <h1 className="text-8xl md:text-9xl font-black text-white opacity-20 select-none">
+    <div className="h-screen w-screen bg-black flex items-center justify-center relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="text-center max-w-lg mx-auto relative z-10 px-4">
+        {/* Elegant 404 with glow effect */}
+        <div className="relative mb-12">
+          <h1 className="text-9xl md:text-[12rem] font-extralight text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600 leading-none tracking-tight">
             404
           </h1>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-6xl md:text-7xl font-bold text-white animate-pulse">
-              404
+          <div className="absolute inset-0 text-9xl md:text-[12rem] font-extralight text-white opacity-10 blur-sm">
+            404
+          </div>
+        </div>
+
+        {/* Error Message with fade-in animation */}
+        <div className="space-y-4 mb-16 animate-fade-in">
+          <h2 className="text-2xl md:text-3xl font-light text-white tracking-wide">
+            Lost in the void
+          </h2>
+          <p className="text-gray-400 text-lg leading-relaxed max-w-md mx-auto">
+            The page you're seeking has drifted into the digital abyss.
+          </p>
+        </div>
+
+        {/* Elegant countdown with circular progress */}
+        <div className="mb-12 animate-fade-in-delay">
+          <div className="relative inline-flex items-center justify-center w-24 h-24 mb-4">
+            <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="2"
+                fill="none"
+              />
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke="white"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 45}`}
+                strokeDashoffset={`${2 * Math.PI * 45 * (countdown / 5)}`}
+                className="transition-all duration-1000 ease-linear"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-2xl font-light text-white">{countdown}</span>
             </div>
           </div>
+          <p className="text-gray-500 text-sm">
+            Returning home automatically
+          </p>
         </div>
 
-        {/* Error Message */}
-        <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4 animate-fade-in-up">
-          Oops! Page Not Found
-        </h2>
-
-        <p className="text-white/80 text-lg mb-8 leading-relaxed animate-fade-in-up delay-100">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-
-        {/* Countdown Box */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20 animate-fade-in-up delay-200">
-          <div className="text-white/90 mb-2">
-            Redirecting to home page in
-          </div>
-          <div className="text-4xl font-bold text-white">
-            {countdown}
-          </div>
-          <div className="text-white/70 text-sm mt-1">
-            seconds
-          </div>
-        </div>
-
-        {/* Go Home Button */}
+        {/* Beautiful button with subtle effects */}
         <button
           onClick={handleGoHome}
-          className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-medium text-white transition-all duration-300 ease-out border-2 border-white/30 rounded-full hover:border-white hover:bg-white hover:text-purple-600 hover:scale-105 hover:shadow-xl animate-fade-in-up delay-300"
+          className="group relative inline-flex items-center justify-center px-8 py-4 text-white font-light tracking-wide transition-all duration-300 ease-out animate-fade-in-delay-2"
         >
-          <span className="relative">
-            Go Home Now
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 border border-gray-600 rounded-full group-hover:border-gray-400 transition-colors duration-300"></div>
+          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 rounded-full transition-opacity duration-300"></div>
+          <span className="relative z-10 flex items-center space-x-2">
+            <span>Take me home</span>
+            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </span>
-          <div className="absolute inset-0 rounded-full bg-white/20 scale-0 transition-transform duration-300 group-hover:scale-100"></div>
         </button>
 
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-16 h-16 bg-white/5 rounded-full animate-float delay-1000"></div>
-        <div className="absolute top-1/2 left-5 w-8 h-8 bg-white/5 rounded-full animate-float delay-500"></div>
+        {/* Floating particles */}
+        <div className="absolute top-20 left-10 w-2 h-2 bg-white opacity-20 rounded-full animate-float"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-white opacity-30 rounded-full animate-float-delay"></div>
+        <div className="absolute bottom-32 left-16 w-1.5 h-1.5 bg-white opacity-15 rounded-full animate-float-delay-2"></div>
+        <div className="absolute bottom-20 right-12 w-1 h-1 bg-white opacity-25 rounded-full animate-float"></div>
       </div>
 
       <style jsx>{`
-        @keyframes fade-in-up {
+        @keyframes fade-in {
           from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
@@ -93,36 +124,32 @@ export default function NotFoundPage() {
             transform: translateY(0px);
           }
           50% {
-            transform: translateY(-20px);
+            transform: translateY(-15px);
           }
         }
 
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
+        .animate-fade-in {
+          animation: fade-in 1s ease-out 0.3s both;
         }
 
-        .delay-100 {
-          animation-delay: 0.1s;
+        .animate-fade-in-delay {
+          animation: fade-in 1s ease-out 0.6s both;
         }
 
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-
-        .delay-300 {
-          animation-delay: 0.3s;
-        }
-
-        .delay-500 {
-          animation-delay: 0.5s;
-        }
-
-        .delay-1000 {
-          animation-delay: 1s;
+        .animate-fade-in-delay-2 {
+          animation: fade-in 1s ease-out 0.9s both;
         }
 
         .animate-float {
-          animation: float 3s ease-in-out infinite;
+          animation: float 4s ease-in-out infinite;
+        }
+
+        .animate-float-delay {
+          animation: float 4s ease-in-out infinite 1s;
+        }
+
+        .animate-float-delay-2 {
+          animation: float 4s ease-in-out infinite 2s;
         }
       `}</style>
     </div>

@@ -13,6 +13,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import IsSession from "../context.js";
+import auLocal from "../functions/addLocal";
+
 
 const Session = () => {
   
@@ -22,8 +24,14 @@ const Session = () => {
   const [inputFieldQuestions, setInputFieldQuestions] = useState()
   const { user, isLoaded } = useUser();
   const [selectedTables, setSelectedTables] = useState([]);
+
+
+  useEffect(()=>{
+    // auLocal("UniData",'activeItem',"sessions")
+  },[])
   
   async function onclickHandler() {
+  
     if (!user || !isLoaded) { return; }
     const User = {
       "primaryEmailAddress": {

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import DashboardFooter from "../components/DashboardFooter";
+import auLocal from "../functions/addLocal";
+import getData from "../functions/getData";
 
 function Dashboard() {
   const { user, isLoaded } = useUser();
@@ -11,6 +13,15 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if(!getData("UniData","activeItem")){
+      localStorage.setItem("UniData","{}")
+    }
+   
+
+    auLocal("UniData",'activeItem',"dashboard")
+
+
+
     if (!isLoaded || !user) return; // wait until Clerk is ready
 
     const User = {
