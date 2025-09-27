@@ -33,10 +33,13 @@ const CompletedSection = ({ timerRef, sessionId,  navigate }) => {
      
 
       // update session context
-      isSession.setIsSession(true);
+  
+
+    
 
       // navigate to sessions page
       navigate("/app/sessions");
+       localStorage.clear();
     } catch (error) {
       console.error("Error completing session:", error);
     }

@@ -252,7 +252,10 @@ function Improver() {
 
     setTableData(res.data);
     setScore(newScore);
-    inputRef.current.focus();
+    if(inputRef.current){
+inputRef.current.focus();
+    }
+    
     setInputVal("");
   }
 

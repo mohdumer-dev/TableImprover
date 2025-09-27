@@ -15,7 +15,7 @@ import { useContext } from "react";
 import IsSession from "../context.js";
 
 const Session = () => {
-  localStorage.clear();
+  
   const isSession = useContext(IsSession)
   isSession.setIsSession(true)
   const navigate = useNavigate()
