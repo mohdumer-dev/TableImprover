@@ -1,8 +1,6 @@
 
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
 
 import Home from "../page/Home";
 import Dashboard from "../page/Dashboard";
@@ -10,6 +8,9 @@ import SimpleSidebar from "../components/userNavBar";
 import Session from "../page/session.jsx";
 import Improver from "../page/sessionImprove.jsx";
 import IsSession from "../context.js";
+import ProtectedRoute from "../components/RouteProtector.jsx";
+import NotFoundPage from "../page/404.jsx";
+
 
 function App() {
   const [isSession, setIsSession] = useState(true);
@@ -33,15 +34,13 @@ function App() {
     const getMainContentStyle = () => {
       if (isMobile || isTablet) {
         return {
-          // padding: isMobile ? "1rem" : "1.5rem",
           minHeight: "100vh",
           width: "100%",
           transition: "all 0.3s ease",
-        
         };
       } else {
         return {
-          marginLeft: "280px", // push content right
+          marginLeft: "280px",
           padding: "0rem",
           minHeight: "100vh",
           width: "calc(100% - 280px)",
@@ -64,12 +63,23 @@ function App() {
     <IsSession.Provider value={{ isSession, setIsSession }}>
       <BrowserRouter>
         <Routes>
+          {/* Public */}
           <Route path="/" element={<Home />} />
-          <Route path="/app" element={<Layout />}>
+          <Route path="*" element={<NotFoundPage/>}/>
+
+          {/* Protected layout */}
+          <Route
+            path="/app"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="sessions" element={<Session />} />
             <Route path="sessions/improve" element={<Improver />} />
-            <Route index element={<Dashboard />} />
           </Route>
         </Routes>
       </BrowserRouter>

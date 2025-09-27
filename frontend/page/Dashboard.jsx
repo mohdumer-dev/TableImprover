@@ -351,9 +351,11 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Footer Developer */}
-        <DashboardFooter/>
+       
+      
       </div>
+       {/* Footer Developer */}
+       <div className="mb-0  p-0 "> <DashboardFooter/></div>
     </div>
   );
 }
