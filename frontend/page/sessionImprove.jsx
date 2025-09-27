@@ -211,6 +211,7 @@ import auLocal from "../functions/addLocal.js";
 
 
 function Improver() {
+  const [alreadyCompleted,setAlreadyComplete]=useState(false)
   const inputRef = useRef();
   const navigate = useNavigate();
   const timerRef = useRef();
@@ -225,7 +226,7 @@ function Improver() {
   const [time, setTime] = useState(0);
   const [inputVal, setInputVal] = useState("");
   const [tableData, setTableData] = useState();
-
+  console.log("On completed "+completed+alreadyCompleted)
   async function onSumbit() {
     const currentScore = getData("EngineData", "score");
     const questionId = localStorage.getItem("questionId");
@@ -241,6 +242,7 @@ function Improver() {
 
     if (res2.data.completed) {
       setCompleted(true)
+
       
     }
 
@@ -312,6 +314,9 @@ inputRef.current.focus();
 
    //For extra things that you need to do in the mounting stage
    useEffect(()=>{
+
+  
+    setAlreadyComplete(JSON.parse(getData("UniData","completed")))
     // auLocal("UniData",'activeItem',"sessions")
   },[])
 
@@ -343,7 +348,8 @@ inputRef.current.focus();
     );
   }
 
-  if (completed) {
+  if (completed ||  alreadyCompleted) {
+    console.log("it is actually completed "+completed+alreadyCompleted)
     return <CompletedSection timerRef={timerRef} sessionId={sessionId} navigate={navigate} isSession={isSession} />;
   }
 

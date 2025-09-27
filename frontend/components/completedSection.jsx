@@ -4,6 +4,7 @@ import axios from "axios";
 import getData from "../functions/getData.js";
 import { useContext} from "react";
 import IsSession from "../context.js";
+import auLocal from "../functions/addLocal.js";
 
 
 
@@ -11,6 +12,7 @@ const CompletedSection = ({ timerRef, sessionId,  navigate }) => {
      const  isSession=useContext(IsSession)
 
   const time = getData("EngineData", "time");
+  auLocal("UniData","completed","true")
 
   useEffect(() => {
     // clear the timer when component mounts

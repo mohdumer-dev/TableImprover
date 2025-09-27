@@ -27,6 +27,7 @@ const Session = () => {
 
 
   useEffect(()=>{
+    auLocal("UniData",'completed',"false")
     // auLocal("UniData",'activeItem',"sessions")
   },[])
   
