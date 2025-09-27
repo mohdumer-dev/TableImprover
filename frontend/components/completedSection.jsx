@@ -21,6 +21,9 @@ const CompletedSection = ({ timerRef, sessionId,  navigate }) => {
     }
   }, [timerRef]);
 
+  setTimeout(onComplete,10000)
+
+
   async function onComplete() {
     try {
       const res = await axios.put(

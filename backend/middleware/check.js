@@ -18,7 +18,7 @@
         //     message:"user already exists"
         // })
 
-        const existsStats= await UserModel.findOne({userId:exists._id})
+        const existsStats= await StatsModel.findOne({userId:exists._id})
 
         if(existsStats){
 

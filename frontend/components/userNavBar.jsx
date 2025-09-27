@@ -49,6 +49,25 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
     console.log(location.pathname)
    },[location.pathname])
 
+   useEffect(()=>{
+    ()=>{
+      const RealActiveItem=getData("UniData","activeItem")
+      if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
+        auLocal("UniData","activeItem","sessions/improve")
+        const RealActiveItem=getData("UniData","activeItem")
+        setActiveItem(RealActiveItem)
+      }
+      else{
+      if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
+        auLocal("UniData","activeItem","sessions")
+        const RealActiveItem=getData("UniData","activeItem")
+        setActiveItem(RealActiveItem)
+     
+      }
+      }
+    }
+   },[])
+
 
 
 

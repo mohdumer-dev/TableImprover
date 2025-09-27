@@ -13,6 +13,7 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+
     if(!getData("UniData","activeItem")){
       localStorage.setItem("UniData","{}")
     }
@@ -216,9 +217,12 @@ function Dashboard() {
                     strokeWidth="8"
                     fill="transparent"
                     strokeDasharray={`${2 * Math.PI * 56}`}
-                    strokeDashoffset={`${2 * Math.PI * 56 * (1 - (res?.data?.stats?.rightAnswers && res?.data?.stats?.wrongAnswers 
-                      ? (res.data.stats.rightAnswers / (res.data.stats.rightAnswers + res.data.stats.wrongAnswers))
-                      : 0))}`}
+                    strokeDashoffset={`${2 * Math.PI * 56 * (1 - (() => {
+                      const right = res?.data?.stats?.rightAnswers || 0;
+                      const wrong = res?.data?.stats?.wrongAnswers || 0;
+                      const total = right + wrong;
+                      return total === 0 ? 0 : right / total;
+                    })())}`}
                     className="text-green-500 transition-all duration-1000 ease-out"
                     strokeLinecap="round"
                   />
@@ -226,9 +230,12 @@ function Dashboard() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900">
-                      {res?.data?.stats?.rightAnswers && res?.data?.stats?.wrongAnswers 
-                        ? Math.round((res.data.stats.rightAnswers / (res.data.stats.rightAnswers + res.data.stats.wrongAnswers)) * 100)
-                        : 0}%
+                    {(() => {
+  const right = res?.data?.stats?.rightAnswers || 0;
+  const wrong = res?.data?.stats?.wrongAnswers || 0;
+  const total = right + wrong;
+  return total === 0 ? 0 : Math.round((right / total) * 100);
+})()}%
                     </div>
                     <div className="text-sm text-gray-500">accurate</div>
                   </div>
@@ -316,9 +323,12 @@ function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
               <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1">
-                {res?.data?.stats?.rightAnswers && res?.data?.stats?.wrongAnswers 
-                  ? Math.round((res.data.stats.rightAnswers / (res.data.stats.rightAnswers + res.data.stats.wrongAnswers)) * 100)
-                  : 0}%
+              {(() => {
+  const right = res?.data?.stats?.rightAnswers || 0;
+  const wrong = res?.data?.stats?.wrongAnswers || 0;
+  const total = right + wrong;
+  return total === 0 ? 0 : Math.round((right / total) * 100);
+})()}%
               </div>
               <div className="text-sm text-green-700 font-medium">Accuracy</div>
             </div>

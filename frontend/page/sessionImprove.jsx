@@ -211,6 +211,7 @@ import auLocal from "../functions/addLocal.js";
 
 
 function Improver() {
+   const questionId = localStorage.getItem("questionId");
   const [alreadyCompleted,setAlreadyComplete]=useState(false)
   const inputRef = useRef();
   const navigate = useNavigate();
@@ -220,7 +221,16 @@ function Improver() {
   const sessionId = useRef(ses);
   const isSession = useContext(IsSession);
 
-  const score = useFetch("http://localhost:3000/api/v1/session/stats/" + sessionId.current);
+  isSession.setIsSession(false);
+  
+
+  if(!sessionId.current  &&!questionId){
+
+     navigate("/app/sessions")
+
+  }
+
+  const score = useFetch("http://localhost:3000/api/v1/session/intialQuestions/" + sessionId.current);
 
   const [Score, setScore] = useState(0);
   const [time, setTime] = useState(0);
@@ -278,6 +288,8 @@ inputRef.current.focus();
    
 
   useEffect(() => {
+
+    
     
     timerRef.current = setInterval(() => {
       const prevTime = parseInt(getData("EngineData", "time"));
@@ -300,7 +312,14 @@ inputRef.current.focus();
 
   // Fetch first question
   useEffect(() => {
-    isSession.setIsSession(false);
+
+   
+  if(!sessionId.current  &&!questionId){
+
+    navigate("/app/sessions")
+
+ }
+    
     async function call() {
       const questionId = localStorage.getItem("questionId");
       const res = await axios.get("http://localhost:3000/api/v1/session/getQuestions/" + questionId);
@@ -314,6 +333,11 @@ inputRef.current.focus();
 
    //For extra things that you need to do in the mounting stage
    useEffect(()=>{
+
+    // if(isSession.isSession){
+    //   navigate("/app/sessions")
+    // }
+
 
   
     setAlreadyComplete(JSON.parse(getData("UniData","completed")))

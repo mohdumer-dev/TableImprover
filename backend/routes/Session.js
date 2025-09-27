@@ -48,7 +48,7 @@ SessionRouter.post("/create", async function (req, res) {
 });
 
 
-SessionRouter.get("/stats/:sessionId", async (req,res)=>{
+SessionRouter.get("/intialQuestions/:sessionId", async (req,res)=>{
 
 const { sessionId } = req.params;
 
@@ -61,8 +61,6 @@ if(sessionId===null){
       return res.status(404).json({ error: "Session not found" });
     }
 const { rightAnswers, numberOfQuestions } = session;
-console.log(rightAnswers,
-  numberOfQuestions)
 
 res.json({
   rightAnswers,
@@ -193,6 +191,22 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
 
     if(ActualAnswer==answer){
 
+      console.log(numberOfQuestionsDone)
+
+
+
+     const  questionUpdate=  await QuestionModel.updateOne(
+        {sessionId:sessionId},
+        {
+          $set: {
+            [`questions.${numberOfQuestionsDone}.correct`]: true
+          }
+        }
+      )
+
+      console.log("this is update of question"+questionUpdate)
+
+
         const response=   await SessionModel.updateOne(
         { _id:sessionId },
         { $inc: { numberOfQuestionsDone: 1 ,rightAnswers:1} }
@@ -209,6 +223,11 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
         res.json({correct:true,completed:completed})
 
     }else{
+
+      const  questionUpdate=  await QuestionModel.updateOne(
+        {sessionId:sessionId},
+        {$set: {[`questions.${numberOfQuestionsDone}.correct`]: false}}
+      )
 
          await SessionModel.updateOne(
         {_id: sessionId },
