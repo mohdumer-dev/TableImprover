@@ -26,7 +26,15 @@ const Session = () => {
   const [inputFieldQuestions, setInputFieldQuestions] = useState()
   const { user, isLoaded } = useUser();
   const [selectedTables, setSelectedTables] = useState([]);
+  const [sessionStatus, setSessionStatus] = useState('Incomplete');
 
+  useEffect(() => {
+    if (inputFieldQuestions && selectedTables.length) {
+      setSessionStatus('Ready');
+    } else {
+      setSessionStatus('Incomplete');
+    }
+  }, [inputFieldQuestions, selectedTables.length]); 
 
   useEffect(()=>{
     auLocal("UniData",'completed',"false")
@@ -34,7 +42,7 @@ const Session = () => {
   },[])
   
   async function onclickHandler() {
-  
+    if(sessionStatus==="Incomplete"){return ;}
     if (!user || !isLoaded) { return; }
     const User = {
       "primaryEmailAddress": {
@@ -167,7 +175,7 @@ const Session = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <div className={`w-1 h-1 rounded-full ${inputFieldQuestions && selectedTables.length ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                        <span>Status: {inputFieldQuestions && selectedTables.length ? 'Ready'  : 'Incomplete'}</span>
+                        <span>Status: {sessionStatus}</span>
                       </div>
                     </div>
                   </div>
