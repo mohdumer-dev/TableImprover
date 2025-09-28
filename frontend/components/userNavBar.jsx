@@ -14,8 +14,12 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
   const { isSession } = useContext(IsSession);
   const { user } = useUser();  // get user info from Clerk
 
-  const ActiveItem= getData("UniData","activeItem")
-
+  let ActiveItem;
+try{
+  ActiveItem= getData("UniData","activeItem")
+}catch{
+  ActiveItem="dashboard"
+}
   if(!ActiveItem){
     auLocal("UniData","activeItem","dashboard")
   }

@@ -1,64 +1,52 @@
- import { UserModel,StatsModel } from "../models.js"
+import { UserModel, StatsModel } from "../models.js";
 
- import mongoose from "mongoose";
- export default async function check(req,res,next){
- console.log("They hited me")
-    const user=req.body.user
-    const username=user.fullName
-    const email=user.primaryEmailAddress.emailAddress
+export default async function check(req, res, next) {
+    try {
+        console.log("They hit me");
+        const user = req.body.user;
+        const username = user.fullName;
+        const email = user.primaryEmailAddress.emailAddress;
 
-    console.log(email)
+        console.log(email);
 
-    const exists= await UserModel.findOne({email:email})
+        // Use findOneAndUpdate with upsert for atomic operation
+        const userDoc = await UserModel.findOneAndUpdate(
+            { email: email },
+            { 
+                $setOnInsert: { 
+                    email, 
+                    username 
+                }
+            },
+            { 
+                upsert: true, 
+                new: true,
+                runValidators: true 
+            }
+        );
 
-    console.log(exists)
+        // Similarly for stats - atomic operation to prevent duplicates
+        await StatsModel.findOneAndUpdate(
+            { userId: userDoc._id },
+            { 
+                $setOnInsert: { 
+                    userId: userDoc._id,
+                    // any other default stats fields
+                }
+            },
+            { 
+                upsert: true, 
+                new: true,
+                runValidators: true
+            }
+        );
 
-    if(exists){
-        // res.json({
-        //     message:"user already exists"
-        // })
-
-        const existsStats= await StatsModel.findOne({userId:exists._id})
-
-        if(existsStats){
-
-            next()
-
-        }
-
-
-        else{
-
-             await StatsModel.create({
-            userId:exists._id
-        })
-
-        next()
-
-        }
-
-      
-
-    }else{
-
-         await UserModel.create({ 
-            email,
-            username,
-           
+        next();
+    } catch (error) {
+        console.error("Error in check middleware:", error);
+        res.status(500).json({ 
+            message: "Error processing user check",
+            error: error.message 
         });
-        const user= await UserModel.findOne({email:email })
-        await StatsModel.create({
-            userId:user._id
-        })
-
-
-
-
-        // res.json({
-        //       message:"user did not exist but  we  created it him  in the backend"
-
-        // })
-        next()
     }
-
 }

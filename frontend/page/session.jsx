@@ -17,6 +17,8 @@ import auLocal from "../functions/addLocal";
 
 
 const Session = () => {
+
+  const [isReady,setIsReady]=useState(false)
   
   const isSession = useContext(IsSession)
   isSession.setIsSession(true)
@@ -165,7 +167,7 @@ const Session = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <div className={`w-1 h-1 rounded-full ${inputFieldQuestions && selectedTables.length ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                        <span>Status: {inputFieldQuestions && selectedTables.length ? 'Ready' : 'Incomplete'}</span>
+                        <span>Status: {inputFieldQuestions && selectedTables.length ? 'Ready'  : 'Incomplete'}</span>
                       </div>
                     </div>
                   </div>

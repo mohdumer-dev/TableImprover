@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Calculator, BarChart3, PieChart, TrendingUp, Zap, Shield, Users, Star } from "lucide-react";
-import { SignInButton, SignOutButton, useUser ,SignIn} from "@clerk/clerk-react";
+import { Calculator, BarChart3, Target, Trophy, Zap, Shield, Users, Star, Brain, Clock, Award, BookOpen, TrendingUp, CheckCircle } from "lucide-react";
+import { SignInButton, SignOutButton, useUser, SignIn } from "@clerk/clerk-react";
+import LoadingScreen from "../components/LoadingScreen";
 
 const NavBar = () => {
   const { isSignedIn, user } = useUser();
-
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
@@ -15,7 +15,7 @@ const NavBar = () => {
               <Calculator className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CalcPro
+              MathMaster
             </span>
           </div>
 
@@ -67,38 +67,46 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => {
 };
 
 const Home = () => {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
 
-  // Redirect to dashboard if user is already signed in
+  // Show loading immediately if user is signed in
   useEffect(() => {
-    if (isSignedIn) {
-      window.location.href = '/app/dashboard';
+    if (isLoaded && isSignedIn) {
+      // Redirect after short delay
+      setTimeout(() => {
+        window.location.href = '/app/dashboard';
+      }, 1000);
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, isLoaded]);
+
+  // Show loading screen immediately if user is signed in
+  if (isLoaded && isSignedIn) {
+    return <LoadingScreen />;
+  }
 
   const features = [
     {
-      icon: Calculator,
-      title: "Advanced Calculator",
-      description: "Perform complex calculations with our powerful calculator engine.",
+      icon: Target,
+      title: "Interactive Practice",
+      description: "Practice multiplication tables with timed sessions and instant feedback on your answers.",
       color: "bg-gradient-to-r from-blue-500 to-cyan-500"
     },
     {
       icon: BarChart3,
-      title: "Data Visualization",
-      description: "Create stunning charts and graphs from your calculation results.",
+      title: "Progress Tracking",
+      description: "Monitor your improvement with detailed statistics and accuracy charts.",
       color: "bg-gradient-to-r from-purple-500 to-pink-500"
     },
     {
-      icon: TrendingUp,
-      title: "Trend Analysis",
-      description: "Analyze patterns and trends in your mathematical data.",
+      icon: Clock,
+      title: "Timed Sessions",
+      description: "Challenge yourself with time-based practice sessions to improve speed and accuracy.",
       color: "bg-gradient-to-r from-green-500 to-teal-500"
     },
     {
-      icon: PieChart,
-      title: "Statistical Tools",
-      description: "Access comprehensive statistical analysis and reporting tools.",
+      icon: Trophy,
+      title: "Achievement System",
+      description: "Earn achievements and track your learning milestones as you master each table.",
       color: "bg-gradient-to-r from-orange-500 to-red-500"
     }
   ];
@@ -120,14 +128,13 @@ const Home = () => {
             <div className="space-y-4">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold">
                 <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                  Calculate
+                  Master
                 </span>
                 <br />
-                <span className="text-gray-900">Beyond Limits</span>
+                <span className="text-gray-900">Multiplication Tables</span>
               </h1>
               <p className="text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Experience the future of mathematical computation with our advanced calculation platform.
-                Fast, accurate, and beautifully designed.
+                Transform your multiplication skills with interactive practice sessions, real-time progress tracking, and personalized learning paths.
               </p>
             </div>
 
@@ -144,12 +151,12 @@ const Home = () => {
                 <SignInButton
 
                   mode="modal"
-                  afterSignInUrl="/app/adashboard"
+                  afterSignInUrl="/app/dashboard"
                   afterSignUpUrl="/app/dashboard"
                 >
                   <button className="group cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2">
-                    <span>Get Started</span>
-                    <Zap className="h-5 w-5 group-hover:animate-pulse" />
+                    <span>Start Learning</span>
+                    <Brain className="h-5 w-5 group-hover:animate-pulse" />
                   </button>
                 </SignInButton>
               )}
@@ -166,10 +173,10 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Powerful <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Features</span>
+              Powerful <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Learning Tools</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Everything you need to solve complex mathematical problems and visualize your data
+              Everything you need to master multiplication tables with confidence and speed
             </p>
           </div>
 
@@ -186,16 +193,56 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-white">
             <div className="space-y-2">
-              <div className="text-4xl font-bold">1M+</div>
-              <div className="text-purple-100">Calculations Performed</div>
+              <div className="text-4xl font-bold">500K+</div>
+              <div className="text-purple-100">Questions Answered</div>
             </div>
             <div className="space-y-2">
-              <div className="text-4xl font-bold">50K+</div>
-              <div className="text-purple-100">Active Users</div>
+              <div className="text-4xl font-bold">25K+</div>
+              <div className="text-purple-100">Students Learning</div>
             </div>
             <div className="space-y-2">
-              <div className="text-4xl font-bold">99.9%</div>
-              <div className="text-purple-100">Accuracy Rate</div>
+              <div className="text-4xl font-bold">95%</div>
+              <div className="text-purple-100">Improvement Rate</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              How It <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Works</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Simple steps to multiplication mastery
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center space-y-4">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-6 rounded-full w-20 h-20 mx-auto flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800">Choose Your Level</h3>
+              <p className="text-gray-600">Select which multiplication tables you want to practice and set your difficulty level</p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-full w-20 h-20 mx-auto flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800">Practice & Learn</h3>
+              <p className="text-gray-600">Answer questions in timed sessions with instant feedback and helpful hints</p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="bg-gradient-to-r from-green-500 to-teal-500 p-6 rounded-full w-20 h-20 mx-auto flex items-center justify-center">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800">Track Progress</h3>
+              <p className="text-gray-600">Monitor your improvement with detailed analytics and celebrate your achievements</p>
             </div>
           </div>
         </div>
@@ -206,33 +253,33 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Why Choose <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">CalcPro?</span>
+              Why Choose <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">MathMaster?</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center space-y-4">
               <div className="bg-gradient-to-r from-green-500 to-teal-500 p-4 rounded-2xl w-fit mx-auto">
-                <Zap className="h-8 w-8 text-white" />
+                <Brain className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800">Lightning Fast</h3>
-              <p className="text-gray-600">Get instant results with our optimized calculation engine</p>
+              <h3 className="text-2xl font-semibold text-gray-800">Smart Learning</h3>
+              <p className="text-gray-600">Adaptive practice sessions that adjust to your skill level and learning pace</p>
             </div>
 
             <div className="text-center space-y-4">
               <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-2xl w-fit mx-auto">
-                <Shield className="h-8 w-8 text-white" />
+                <Award className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800">Secure & Reliable</h3>
-              <p className="text-gray-600">Your data is protected with enterprise-grade security</p>
+              <h3 className="text-2xl font-semibold text-gray-800">Proven Results</h3>
+              <p className="text-gray-600">Track your progress with detailed analytics and see real improvement</p>
             </div>
 
             <div className="text-center space-y-4">
               <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4 rounded-2xl w-fit mx-auto">
-                <Users className="h-8 w-8 text-white" />
+                <BookOpen className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800">Community Driven</h3>
-              <p className="text-gray-600">Join thousands of users solving problems together</p>
+              <h3 className="text-2xl font-semibold text-gray-800">Complete Curriculum</h3>
+              <p className="text-gray-600">Master all multiplication tables from 1x1 to 12x12 systematically</p>
             </div>
           </div>
         </div>
@@ -243,10 +290,10 @@ const Home = () => {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <div className="space-y-6">
             <h2 className="text-4xl font-bold text-white">
-              Ready to Start Calculating?
+              Ready to Master Multiplication?
             </h2>
             <p className="text-xl text-gray-300">
-              Join thousands of users who trust CalcPro for their mathematical needs
+              Join thousands of students who have improved their math skills with MathMaster
             </p>
             {isSignedIn ? (
               <button
@@ -263,8 +310,8 @@ const Home = () => {
                 afterSignUpUrl="/app/dashboard"
               >
                 <button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-4 rounded-2xl text-xl font-semibold shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 mx-auto">
-                  <span>Get Started Now</span>
-                  <Star className="h-5 w-5" />
+                  <span>Start Learning Now</span>
+                  <Brain className="h-5 w-5" />
                 </button>
               </SignInButton>
             )}
@@ -281,11 +328,11 @@ const Home = () => {
                 <Calculator className="h-5 w-5 text-white" />
               </div>
               <span className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                CalcPro
+                MathMaster
               </span>
             </div>
             <div className="text-gray-600 text-sm">
-              © {new Date().getFullYear()} CalcPro. All rights reserved.
+              © {new Date().getFullYear()} MathMaster. All rights reserved.
             </div>
           </div>
         </div>
