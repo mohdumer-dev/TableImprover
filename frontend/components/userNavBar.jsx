@@ -1,64 +1,86 @@
-
-import React, { useState, useContext, useEffect } from "react";
-import { BarChart3, Users, Menu } from "lucide-react";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { BarChart3, Users, Menu, X } from "lucide-react";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import IsSession from "../context.js";
 import getData from "../functions/getData.js";
 import { useLocation } from "react-router-dom";
 import auLocal from "../functions/addLocal.js";
-import resetLocalStorage, { isLocalStorageCorrupted } from "../functions/resetLocalStorage.js";
 
 const SimpleSidebar = ({ isMobile, isTablet }) => {
 
   const location=useLocation()
   const { isSession } = useContext(IsSession);
   const { user } = useUser();  // get user info from Clerk
+  const userButtonRef = useRef(null); // Reference to the UserButton
 
-  // Initialize localStorage if it doesn't exist or is corrupted
-  useEffect(() => {
-    if (!localStorage.getItem("UniData") || isLocalStorageCorrupted()) {
-      resetLocalStorage();
-    }
-  }, []);
+  let ActiveItem;
+try{
+  ActiveItem= getData("UniData","activeItem")
+}catch{
+  ActiveItem="dashboard"
+}
+  if(!ActiveItem){
+    auLocal("UniData","activeItem","dashboard")
+  }
 
-  // Get current active item with proper fallback
-  const getCurrentActiveItem = () => {
-    const stored = getData("UniData", "activeItem");
-    return stored || "dashboard";
-  };
+ const RealActiveItem=getData("UniData","activeItem")
 
-  // Determine active item based on current path
-  const getActiveItemFromPath = () => {
-    const path = location.pathname;
-    if (path === "/app/dashboard") return "dashboard";
-    if (path === "/app/sessions") return "sessions";
-    if (path === "/app/sessions/improve") return "sessions/improve";
-    return "dashboard";
-  };
+ 
 
-  const [activeItem, setActiveItem] = useState(getCurrentActiveItem());
+  const [activeItem, setActiveItem] = useState(RealActiveItem)
   const [isOpen, setIsOpen] = useState(!(isMobile || isTablet));
   const navigateTo = useNavigate();
 
-  // Update active item based on current path
-  useEffect(() => {
-    const pathBasedItem = getActiveItemFromPath();
-    const currentItem = getCurrentActiveItem();
-    
-    // Update if path doesn't match stored item
-    if (pathBasedItem !== currentItem) {
-      auLocal("UniData", "activeItem", pathBasedItem);
-      setActiveItem(pathBasedItem);
-    } else {
-      setActiveItem(currentItem);
+  useEffect(()=>{
+    const RealActiveItem=getData("UniData","activeItem")
+    if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
+      auLocal("UniData","activeItem","sessions/improve")
+      const RealActiveItem=getData("UniData","activeItem")
+      setActiveItem(RealActiveItem)
     }
-  }, [location.pathname])
+    else{
+    if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
+      auLocal("UniData","activeItem","sessions")
+      const RealActiveItem=getData("UniData","activeItem")
+      setActiveItem(RealActiveItem)
+   
+    }
+    }
+    
+    
 
+    console.log(location.pathname)
+   },[location.pathname])
 
+   useEffect(()=>{
+    ()=>{
+      const RealActiveItem=getData("UniData","activeItem")
+      if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
+        auLocal("UniData","activeItem","sessions/improve")
+        const RealActiveItem=getData("UniData","activeItem")
+        setActiveItem(RealActiveItem)
+      }
+      else{
+      if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
+        auLocal("UniData","activeItem","sessions")
+        const RealActiveItem=getData("UniData","activeItem")
+        setActiveItem(RealActiveItem)
+     
+      }
+      }
+    }
+   },[])
 
-
-
+  // Function to programmatically click the UserButton
+  const handleUserSectionClick = () => {
+    if (userButtonRef.current) {
+      const button = userButtonRef.current.querySelector('button');
+      if (button) {
+        button.click();
+      }
+    }
+  };
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
@@ -114,7 +136,7 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
             cursor: "pointer",
           }}
         >
-          <Menu size={24} />
+          {isOpen ? <X size={24}  /> : <Menu size={24} />}
         </button>
       )}
 
@@ -163,16 +185,22 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
                 key={item.id}
                 style={getNavItemStyle(isActive)}
                 onClick={() => {
-                  // Update active item in localStorage
-                  auLocal("UniData", "activeItem", item.id);
-                  
-                  // Update state
-                  setActiveItem(item.id);
-                  
-                  // Navigate to the page
+
+                  const ActiveItem= getData("UniData","activeItem")
+
+                  if(ActiveItem){
+                    
+                      auLocal("UniData","activeItem",item.id)
+                    
+                    
+                  }
+
+                 const RealActiveItem=getData("UniData","activeItem")
+
+                 console.log("this is active"+RealActiveItem)
+
+                  setActiveItem(RealActiveItem);
                   navigateTo(`/app/${item.id}`);
-                  
-                  // Close sidebar on mobile
                   if (isMobile || isTablet) setIsOpen(false);
                 }}
               >
@@ -183,8 +211,9 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
           })}
         </div>
 
-        {/* User section — username + gmail */}
+        {/* User section — clickable area that triggers UserButton */}
         <div
+          onClick={handleUserSectionClick}
           style={{
             padding: "1.5rem",
             borderTop: "1px solid rgba(255, 255, 255, 0.1)",
@@ -192,17 +221,27 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
             display: "flex",
             alignItems: "center",
             gap: "12px",
+            cursor: "pointer",
+            transition: "background 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
           }}
         >
-          {/* You can keep a small avatar or icon if you want */}
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonAvatarBox: "w-8 h-8 rounded-full", // small avatar
-              },
-            }}
-          />
-          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          {/* Hidden UserButton - triggers the Clerk modal */}
+          <div ref={userButtonRef} style={{ pointerEvents: 'none' }}>
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "w-8 h-8 rounded-full",
+                },
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", flex: 1 }}>
             <span
               style={{
                 fontWeight: "600",
