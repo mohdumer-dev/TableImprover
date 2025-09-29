@@ -5,24 +5,21 @@ import axios from "axios";
 import DashboardFooter from "../components/DashboardFooter";
 import auLocal from "../functions/addLocal";
 import getData from "../functions/getData";
+import resetLocalStorage, { isLocalStorageCorrupted } from "../functions/resetLocalStorage";
 
 function Dashboard() {
   const { user, isLoaded } = useUser();
-  const [res, setRes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [res, setRes] = useState(null);
+
   useEffect(() => {
-
-    if(!getData("UniData","activeItem")){
-      localStorage.setItem("UniData","{}")
+    if (!localStorage.getItem("UniData") || isLocalStorageCorrupted()) {
+      resetLocalStorage();
     }
-   
 
-    auLocal("UniData",'activeItem',"dashboard")
-    
-
-
+    auLocal("UniData", "activeItem", "dashboard");
 
     if (!isLoaded || !user) return; // wait until Clerk is ready
 

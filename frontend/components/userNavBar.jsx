@@ -7,6 +7,7 @@ import IsSession from "../context.js";
 import getData from "../functions/getData.js";
 import { useLocation } from "react-router-dom";
 import auLocal from "../functions/addLocal.js";
+import resetLocalStorage, { isLocalStorageCorrupted } from "../functions/resetLocalStorage.js";
 
 const SimpleSidebar = ({ isMobile, isTablet }) => {
 
@@ -14,63 +15,45 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
   const { isSession } = useContext(IsSession);
   const { user } = useUser();  // get user info from Clerk
 
-  let ActiveItem;
-try{
-  ActiveItem= getData("UniData","activeItem")
-}catch{
-  ActiveItem="dashboard"
-}
-  if(!ActiveItem){
-    auLocal("UniData","activeItem","dashboard")
-  }
+  // Initialize localStorage if it doesn't exist or is corrupted
+  useEffect(() => {
+    if (!localStorage.getItem("UniData") || isLocalStorageCorrupted()) {
+      resetLocalStorage();
+    }
+  }, []);
 
- const RealActiveItem=getData("UniData","activeItem")
+  // Get current active item with proper fallback
+  const getCurrentActiveItem = () => {
+    const stored = getData("UniData", "activeItem");
+    return stored || "dashboard";
+  };
 
- 
+  // Determine active item based on current path
+  const getActiveItemFromPath = () => {
+    const path = location.pathname;
+    if (path === "/app/dashboard") return "dashboard";
+    if (path === "/app/sessions") return "sessions";
+    if (path === "/app/sessions/improve") return "sessions/improve";
+    return "dashboard";
+  };
 
-  const [activeItem, setActiveItem] = useState(RealActiveItem)
+  const [activeItem, setActiveItem] = useState(getCurrentActiveItem());
   const [isOpen, setIsOpen] = useState(!(isMobile || isTablet));
   const navigateTo = useNavigate();
 
-  useEffect(()=>{
-    const RealActiveItem=getData("UniData","activeItem")
-    if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
-      auLocal("UniData","activeItem","sessions/improve")
-      const RealActiveItem=getData("UniData","activeItem")
-      setActiveItem(RealActiveItem)
-    }
-    else{
-    if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
-      auLocal("UniData","activeItem","sessions")
-      const RealActiveItem=getData("UniData","activeItem")
-      setActiveItem(RealActiveItem)
-   
-    }
-    }
+  // Update active item based on current path
+  useEffect(() => {
+    const pathBasedItem = getActiveItemFromPath();
+    const currentItem = getCurrentActiveItem();
     
-    
-
-    console.log(location.pathname)
-   },[location.pathname])
-
-   useEffect(()=>{
-    ()=>{
-      const RealActiveItem=getData("UniData","activeItem")
-      if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
-        auLocal("UniData","activeItem","sessions/improve")
-        const RealActiveItem=getData("UniData","activeItem")
-        setActiveItem(RealActiveItem)
-      }
-      else{
-      if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
-        auLocal("UniData","activeItem","sessions")
-        const RealActiveItem=getData("UniData","activeItem")
-        setActiveItem(RealActiveItem)
-     
-      }
-      }
+    // Update if path doesn't match stored item
+    if (pathBasedItem !== currentItem) {
+      auLocal("UniData", "activeItem", pathBasedItem);
+      setActiveItem(pathBasedItem);
+    } else {
+      setActiveItem(currentItem);
     }
-   },[])
+  }, [location.pathname])
 
 
 
@@ -180,22 +163,16 @@ try{
                 key={item.id}
                 style={getNavItemStyle(isActive)}
                 onClick={() => {
-
-                  const ActiveItem= getData("UniData","activeItem")
-
-                  if(ActiveItem){
-                    
-                      auLocal("UniData","activeItem",item.id)
-                    
-                    
-                  }
-
-                 const RealActiveItem=getData("UniData","activeItem")
-
-                 console.log("this is active"+RealActiveItem)
-
-                  setActiveItem(RealActiveItem);
+                  // Update active item in localStorage
+                  auLocal("UniData", "activeItem", item.id);
+                  
+                  // Update state
+                  setActiveItem(item.id);
+                  
+                  // Navigate to the page
                   navigateTo(`/app/${item.id}`);
+                  
+                  // Close sidebar on mobile
                   if (isMobile || isTablet) setIsOpen(false);
                 }}
               >
