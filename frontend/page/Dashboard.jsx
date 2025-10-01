@@ -24,12 +24,14 @@ function Dashboard() {
 
     if (!isLoaded || !user) return; // wait until Clerk is ready
 
-    const User = {
+    const User = {g
       "primaryEmailAddress": {
         "emailAddress": user.primaryEmailAddress.emailAddress
       },
       "fullName": user.fullName
     };
+
+    console.log(User)
 
     async function Getit() {
       try {
