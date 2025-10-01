@@ -24,7 +24,7 @@ function Dashboard() {
 
     if (!isLoaded || !user) return; // wait until Clerk is ready
 
-    const User = {g
+    const User = {
       "primaryEmailAddress": {
         "emailAddress": user.primaryEmailAddress.emailAddress
       },
