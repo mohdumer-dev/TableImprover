@@ -127,7 +127,7 @@ try{
             position: "fixed",
             top: "20px",
             left: "20px",
-            zIndex: 1100,
+            zIndex: 30,
             background: "#222",
             color: "white",
             padding: "10px",

@@ -30,21 +30,17 @@ const Session = () => {
 
   useEffect(() => {
     if (inputFieldQuestions && selectedTables.length) {
+      setSessionStatus('Ready');
     } else {
       setSessionStatus('Incomplete');
     }
-  }, [inputFieldQuestions, selectedTables.length]);
+  }, [inputFieldQuestions, selectedTables.length]); 
 
-  useEffect(() => {
-    // Initialize localStorage if needed
-    if (!localStorage.getItem("UniData")) {
-      localStorage.setItem("UniData", JSON.stringify({ activeItem: "sessions", completed: "false" }));
-    }
-    
-    auLocal("UniData", "completed", "false");
-    auLocal("UniData", "activeItem", "sessions");
-  }, [])
-
+  useEffect(()=>{
+    auLocal("UniData",'completed',"false")
+    // auLocal("UniData",'activeItem',"sessions")
+  },[])
+  
   async function onclickHandler() {
     if(sessionStatus==="Incomplete"){return ;}
     if (!user || !isLoaded) { return; }

@@ -257,12 +257,85 @@ SessionRouter.put("/timeTaken",async function (req,res){
         { $set:{timeTaken}}
         );
 
+  const session=await SessionModel.findOne({_id:sessionId})
+  const {statsId}=session
+
+  await  StatsModel.updateOne(
+    {_id: statsId},
+    { $inc:{timeTaken}}
+    );
+
   res.json({
     message:"successfully added the timeTaken"
   })
 
 
 })
+
+SessionRouter.get("/getStats/:sessionId",async function(req,res){
+  const {sessionId}=req.params
+
+  try{
+
+    const  session=await SessionModel.findOne({_id:sessionId})
+    const question=await QuestionModel.findOne({sessionId:sessionId})
+
+    res.json({
+      rightAnswers:session.rightAnswers,
+      wrongAnswers:session.wrongAnswers,
+      numberOfQuestionsDone:session.numberOfQuestionsDone,
+      questions:question.questions
+    })
+
+  }catch{
+    res.status(400).json({
+      "message":"Wrong session id"
+
+    }
+    )
+  }
+
+
+
+
+
+})
+
+SessionRouter.get("/allQuestions/:email",async function(req,res){
+
+  const email=req.params
+   const RealUser= await UserModel.findOne({email:email })
+
+
+  try{
+
+    const  session=await SessionModel.find({userId:RealUser._id})
+    // const question=await QuestionModel.findOne({sessionId:sessionId})
+  // const question  session.map((e,i,arr)=>{ })
+
+
+
+    res.json({
+      rightAnswers:session.rightAnswers,
+      wrongAnswers:session.wrongAnswers,
+      numberOfQuestionsDone:session.numberOfQuestionsDone,
+      questions:question.questions
+    })
+
+  }catch{
+    res.status(400).json({
+      "message":"Wrong session id"
+
+    }
+    )
+  }
+
+
+
+
+
+})
+
 
 export default SessionRouter;
 

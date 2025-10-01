@@ -238,7 +238,8 @@ function Improver() {
   const [tableData, setTableData] = useState();
   console.log("On completed "+completed+alreadyCompleted)
   async function onSumbit() {
-    const currentScore = getData("EngineData", "score");
+    const currentScoreData = getData("EngineData", "score");
+    const currentScore = currentScoreData !== null ? parseInt(currentScoreData) : 0;
     const questionId = localStorage.getItem("questionId");
 
     const res2 = await axios.post("http://localhost:3000/api/v1/session/checkQuestions", {
@@ -257,16 +258,12 @@ function Improver() {
     }
 
     if (res2.data.correct) {
-      const prev = JSON.parse(localStorage.getItem("EngineData"));
-      const newEn = { ...prev, score: currentScore + 1 };
+      const prev = JSON.parse(localStorage.getItem("EngineData")) || { score: 0, time: 0 };
+      const newScore = (currentScore !== null ? parseInt(currentScore) : 0) + 1;
+      const newEn = { ...prev, score: newScore };
       localStorage.setItem("EngineData", JSON.stringify(newEn));
       console.log("i was called data.correct")
-
-        const newScore = getData("EngineData", "score");
-
-         setScore(newScore);
-
-       
+      setScore(newScore);
     }
 
     const res = await axios.get("http://localhost:3000/api/v1/session/getQuestions/" + questionId);
@@ -292,12 +289,13 @@ inputRef.current.focus();
     
     
     timerRef.current = setInterval(() => {
-      const prevTime = parseInt(getData("EngineData", "time"));
-      const prevEngine = JSON.parse(localStorage.getItem("EngineData"));
+      const prevTimeData = getData("EngineData", "time");
+      const prevTime = prevTimeData !== null ? parseInt(prevTimeData) : 0;
+      const prevEngine = JSON.parse(localStorage.getItem("EngineData")) || { score: 0, time: 0 };
       const newTime = prevTime + 1;
       const newEngine = { ...prevEngine, time: newTime };
       localStorage.setItem("EngineData", JSON.stringify(newEngine));
-      setTime(getData("EngineData", "time"));
+      setTime(newTime);
     }, 1000);
     return () => clearInterval(timerRef.current);
   }, []);
@@ -307,6 +305,14 @@ inputRef.current.focus();
     const EngineData = localStorage.getItem("EngineData");
     if (!EngineData) {
       localStorage.setItem("EngineData", JSON.stringify({ score: 0, time: 0 }));
+      setScore(0);
+      setTime(0);
+    } else {
+      // Initialize score and time from localStorage with proper null checks
+      const currentScore = getData("EngineData", "score");
+      const currentTime = getData("EngineData", "time");
+      setScore(currentScore !== null ? parseInt(currentScore) : 0);
+      setTime(currentTime !== null ? parseInt(currentTime) : 0);
     }
   }, []);
 
@@ -325,8 +331,9 @@ inputRef.current.focus();
       const res = await axios.get("http://localhost:3000/api/v1/session/getQuestions/" + questionId);
       setTableData(res.data);
 
-      const score = getData("EngineData", "score");
-      setScore(score);
+      // Score is already set in the EngineData setup useEffect
+      // const score = getData("EngineData", "score");
+      // setScore(score);
     }
     call();
   }, []);
@@ -341,7 +348,7 @@ inputRef.current.focus();
 
   
     setAlreadyComplete(JSON.parse(getData("UniData","completed")))
-    auLocal("UniData", "activeItem", "sessions/improve")
+    // auLocal("UniData",'activeItem',"sessions")
   },[])
 
        const progress =
@@ -390,7 +397,7 @@ inputRef.current.focus();
           </p>
 
           <p className="font-bold text-blue-400 text-xl md:text-2xl bg-gray-800 px-6 py-3 rounded-xl border border-blue-500/40 shadow-lg">
-            Time: {time}s
+            Time: {time >= 60 ? `${Math.floor(time / 60)}m ${time % 60}s` : `${time}s`}
           </p>
         </div>
 
