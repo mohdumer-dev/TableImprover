@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from "react";
+
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import DashboardFooter from "../components/DashboardFooter";
@@ -34,7 +35,7 @@ function Dashboard() {
       try {
         setLoading(true);
         const response = await axios.post(
-          "http://localhost:3000/api/v1/stats/getStats",
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/stats/getStats`,
           { user: User }
         );
         setRes(response);

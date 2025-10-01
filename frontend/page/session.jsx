@@ -50,10 +50,10 @@ const Session = () => {
       },
       "fullName": user.fullName
     };
-    const res = await axios.post("http://localhost:3000/api/v1/session/create", { "user": User, "numberOfQuestions": inputFieldQuestions, "tables": selectedTables })
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/session/create`, { "user": User, "numberOfQuestions": inputFieldQuestions, "tables": selectedTables })
     console.log(res.data)
     localStorage.setItem("sessionId", res.data.sessionId);
-    const QuestionId = await axios.get("http://localhost:3000/api/v1/session/generate/" + res.data.sessionId)
+    const QuestionId = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/session/generate/` + res.data.sessionId)
     localStorage.setItem('questionId', QuestionId.data.message)
     navigate("/app/sessions/improve")
   }

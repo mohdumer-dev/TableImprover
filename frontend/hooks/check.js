@@ -3,7 +3,7 @@ import axios from "axios";
 
 async function sendData(user) {
   try {
-    const response = await axios.post("http://localhost:3000/api/v1/auth/check", {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/check`, {
       user: user,
     });
     console.log(response.data.message);
