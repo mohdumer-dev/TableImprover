@@ -8,17 +8,17 @@ import cors from 'cors'
 
 
 const  corsOptions = {
-  // origin: [
-  //   'http://localhost:5173',
-  //   'https://frontendtable.vercel.app',
-  // ],
-  // credentials: true,
-  // methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  // allowedHeaders: ['Content-Type', 'Authorization'],
-  // optionsSuccessStatus: 200 
+  origin: [
+    'http://localhost:5173',
+    'https://frontendtable.vercel.app',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 
 
 }
-app.use(cors())
+app.use(cors(corsOptions))
 
 import SessionRouter from './routes/Session.js';
 
