@@ -28,6 +28,9 @@ mongoose.connect(process.env.MONGOOSE_URL).then(
 
 
 // Mount the router at a specific path
+app.get("/",function(req,res){
+  res.json({message:"It is working"})
+})
 app.use('/api/v1/auth', Authrouter);
 app.use("/api/v1/stats",StatsRouter);
 app.use("/api/v1/session",SessionRouter);
