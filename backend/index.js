@@ -10,8 +10,7 @@ import cors from 'cors'
 const  corsOptions = {
   origin: [
     'http://localhost:5173',
-    'https://frontendtable.vercel.app',
-    "https://frontendtable-1ljutgm0l-umerbaba1s-projects.vercel.app/"
+    'https://frontendtable.vercel.app/',
   ],
   optionsSuccessStatus: 200 
 }
