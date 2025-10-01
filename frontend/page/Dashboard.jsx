@@ -34,6 +34,12 @@ function Dashboard() {
     console.log(User)
 
     async function Getit() {
+      const User = {
+        "primaryEmailAddress": {
+          "emailAddress": user.primaryEmailAddress.emailAddress
+        },
+        "fullName": user.fullName
+      };
       try {
         setLoading(true);
         const response = await axios.post(
