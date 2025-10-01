@@ -44,7 +44,13 @@ function Dashboard() {
         setLoading(true);
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/stats/getStats`,
-          { user: User }
+          { user: User },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true // Add this
+          }
         );
         setRes(response);
         setError(null);

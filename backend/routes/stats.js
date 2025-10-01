@@ -19,7 +19,7 @@ StatsRouter.post("/getStats",check,async function (req,res) {
         const username=user.fullName
         const email=user.primaryEmailAddress.emailAddress
 
-        console.log(user)
+
 
         const RealUser= await UserModel.findOne({email:email })
 
