@@ -61,7 +61,7 @@ const CompletedSection = ({ timerRef, sessionId, navigate }) => {
         }
       );
 
-      console.log(res.data);
+    
 
       // update session context
       const UniData = localStorage.getItem("UniData");
