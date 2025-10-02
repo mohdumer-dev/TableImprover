@@ -217,7 +217,7 @@ inputRef.current.focus();
               {tableData.table} × {tableData.multiplier}
             </h2>
           ) : (
-            <h2 className="text-4xl sm:text-6xl md:text-8xl font-bold text-gray-400 animate-pulse">Loading...</h2>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
           )}
         </div>
 
