@@ -15,7 +15,7 @@ StatsRouter.use(express.json())
 StatsRouter.post("/getStats",check,async function (req,res) {
 
         const user=req.body.user
-        console.log(user)
+    
         const username=user.fullName
         const email=user.primaryEmailAddress.emailAddress
 

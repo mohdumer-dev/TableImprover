@@ -134,7 +134,7 @@ SessionRouter.get("/generate/:sessionId", async (req, res) => {
     }
 
      } catch (err) {
-    console.error(err);
+   
     res.status(500).json({ error: "Server error or you already  m" });
   }
 
@@ -154,7 +154,7 @@ SessionRouter.get("/getQuestions/:questionId",async function(req,res) {
 
     const {questions}=questionDoc
 
-    console.log(numberOfQuestionsDone)
+
 
     res.json(questions[numberOfQuestionsDone])
 
@@ -191,7 +191,7 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
 
     if(ActualAnswer==answer){
 
-      console.log(numberOfQuestionsDone)
+  
 
 
 
@@ -204,21 +204,21 @@ SessionRouter.post("/checkQuestions",async function (req,res) {
         }
       )
 
-      console.log("this is update of question"+questionUpdate)
+      
 
 
         const response=   await SessionModel.updateOne(
         { _id:sessionId },
         { $inc: { numberOfQuestionsDone: 1 ,rightAnswers:1} }
         );
-        console.log(response)
+    
 
         await StatsModel.updateOne(
         {_id: statsId},
         { $inc: { numberOfQuestionsDone: 1 ,rightAnswers:1} }
         );
-        console.log(response)
-        console.log("hello")
+        
+       
 
         res.json({correct:true,completed:completed})
 

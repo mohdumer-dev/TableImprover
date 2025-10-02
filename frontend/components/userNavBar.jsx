@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { BarChart3, Users, Menu, X } from "lucide-react";
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import { isRouteErrorResponse, useNavigate } from "react-router-dom";
 import IsSession from "../context.js";
 import getData from "../functions/getData.js";
 import { useLocation } from "react-router-dom";
@@ -14,62 +14,58 @@ const SimpleSidebar = ({ isMobile, isTablet }) => {
   const { user } = useUser();  // get user info from Clerk
   const userButtonRef = useRef(null); // Reference to the UserButton
 
-  let ActiveItem;
-try{
-  ActiveItem= getData("UniData","activeItem")
-}catch{
-  ActiveItem="dashboard"
-}
-  if(!ActiveItem){
-    auLocal("UniData","activeItem","dashboard")
-  }
 
- const RealActiveItem=getData("UniData","activeItem")
 
  
 
-  const [activeItem, setActiveItem] = useState(RealActiveItem)
+  const [activeItem, setActiveItem] = useState()
   const [isOpen, setIsOpen] = useState(!(isMobile || isTablet));
   const navigateTo = useNavigate();
 
   useEffect(()=>{
-    const RealActiveItem=getData("UniData","activeItem")
-    if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
-      auLocal("UniData","activeItem","sessions/improve")
-      const RealActiveItem=getData("UniData","activeItem")
-      setActiveItem(RealActiveItem)
+    
+
+    if(location.pathname=="/app/dashboard"){
+
+      setActiveItem('dashboard')
+
+    }
+    if(location.pathname=="/app/sessions/improve"){
+     
+      setActiveItem("sessions/improve")
     }
     else{
-    if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
-      auLocal("UniData","activeItem","sessions")
-      const RealActiveItem=getData("UniData","activeItem")
-      setActiveItem(RealActiveItem)
+    if(location.pathname=="/app/sessions"){
+     
+      setActiveItem("sessions")
    
     }
     }
     
     
 
-    console.log(location.pathname)
+
    },[location.pathname])
 
    useEffect(()=>{
-    ()=>{
-      const RealActiveItem=getData("UniData","activeItem")
-      if(RealActiveItem=="sessions" && location.pathname=="/app/sessions/improve"){
-        auLocal("UniData","activeItem","sessions/improve")
-        const RealActiveItem=getData("UniData","activeItem")
-        setActiveItem(RealActiveItem)
-      }
-      else{
-      if(RealActiveItem=="sessions/improve" && location.pathname=="/app/sessions"){
-        auLocal("UniData","activeItem","sessions")
-        const RealActiveItem=getData("UniData","activeItem")
-        setActiveItem(RealActiveItem)
-     
-      }
-      }
+    
+    if(location.pathname=="/app/dashboard"){
+
+      setActiveItem('dashboard')
+
     }
+    if(location.pathname=="/app/sessions/improve"){
+     
+      setActiveItem("sessions/improve")
+    }
+    else{
+    if(location.pathname=="/app/sessions"){
+     
+      setActiveItem("sessions")
+   
+    }
+    }
+    
    },[])
 
   // Function to programmatically click the UserButton
@@ -186,20 +182,7 @@ try{
                 style={getNavItemStyle(isActive)}
                 onClick={() => {
 
-                  const ActiveItem= getData("UniData","activeItem")
-
-                  if(ActiveItem){
-                    
-                      auLocal("UniData","activeItem",item.id)
-                    
-                    
-                  }
-
-                 const RealActiveItem=getData("UniData","activeItem")
-
-                 console.log("this is active"+RealActiveItem)
-
-                  setActiveItem(RealActiveItem);
+                  // setActiveItem(item.id);
                   navigateTo(`/app/${item.id}`);
                   if (isMobile || isTablet) setIsOpen(false);
                 }}

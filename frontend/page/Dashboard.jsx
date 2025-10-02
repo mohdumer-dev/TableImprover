@@ -31,7 +31,7 @@ function Dashboard() {
       "fullName": user.fullName
     };
 
-    console.log(User)
+
 
     async function Getit() {
       const User = {

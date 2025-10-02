@@ -37,7 +37,7 @@ function Improver() {
   const [time, setTime] = useState(0);
   const [inputVal, setInputVal] = useState("");
   const [tableData, setTableData] = useState();
-  console.log("On completed "+completed+alreadyCompleted)
+ 
   async function onSumbit() {
     const currentScoreData = getData("EngineData", "score");
     const currentScore = currentScoreData !== null ? parseInt(currentScoreData) : 0;
@@ -63,7 +63,7 @@ function Improver() {
       const newScore = (currentScore !== null ? parseInt(currentScore) : 0) + 1;
       const newEn = { ...prev, score: newScore };
       localStorage.setItem("EngineData", JSON.stringify(newEn));
-      console.log("i was called data.correct")
+    
       setScore(newScore);
     }
 
@@ -181,7 +181,7 @@ inputRef.current.focus();
   }
 
   if (completed ||  alreadyCompleted) {
-    console.log("it is actually completed "+completed+alreadyCompleted)
+    
     return <CompletedSection timerRef={timerRef} sessionId={sessionId} navigate={navigate} isSession={isSession} />;
   }
 

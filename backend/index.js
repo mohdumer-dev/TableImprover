@@ -19,10 +19,7 @@ app.use(cors())
 
 import SessionRouter from './routes/Session.js';
 
-mongoose.connect(process.env.MONGOOSE_URL).then(
-    console.log("It is connected")
-)
-
+mongoose.connect(process.env.MONGOOSE_URL)
 
 // Mount the router at a specific path
 app.get("/",function(req,res){
